@@ -1,0 +1,138 @@
+syntax = "proto3";
+
+package lsmdb.v1;
+
+// The Lsmdb service definition.
+service Lsmdb {
+  // Sends a register
+  rpc OpenDB (OpenDBRequest) returns (OpenDBReply);
+
+  rpc OpenDBWeb (OpenDBWebRequest) returns (OpenDBWebReply);
+  
+  rpc Put (PutRequest) returns (PutReply);
+
+  rpc BatchPut (BatchPutRequest) returns (BatchPutReply);
+
+  rpc PutStr (PutStrRequest) returns (PutStrReply);
+
+  rpc Get (GetRequest) returns (GetReply);
+
+  rpc CloseDB(CloseDBRequest) returns (CloseDBReply);
+
+  rpc CloseDBWeb(CloseDBWebRequest) returns (CloseDBWebReply);
+
+  rpc TransferKV(TransferKVRequest) returns (TransferKVReply);
+
+  rpc Transfer(TransferRequest) returns (TransferReply);
+
+  rpc GetKVs(GetKVsRequest) returns (GetKVsReply);
+
+  rpc PrefixData (PrefixRequest) returns (PrefixResponse);
+}
+
+message PrefixRequest {
+  string prefixKey = 1;
+}
+
+// 响应消息
+message PrefixResponse {
+  repeated KeyValue keyValueList = 1; // 键值对数组
+}
+
+// 键值对结构
+message KeyValue {
+  string key = 1;   // 键
+  string value = 2; // 值
+}
+
+message BatchPutRequest {
+  repeated string keys = 1;
+  repeated bytes values = 2;
+}
+
+message BatchPutReply {
+  bool data = 1;
+}
+
+message GetKVsRequest {
+  repeated string keys = 1;
+}
+
+message GetKVsReply {
+  repeated bytes values = 1;
+}
+
+message TransferKVRequest {
+  string regionName = 1;
+  repeated string keys = 2;
+  string nodeAddress = 3;
+}
+
+message TransferKVReply {
+  bool success = 1;
+}
+
+message TransferRequest {
+  string regionName = 1;
+  repeated string keys = 2;
+  string nodeAddress = 3;
+}
+
+message TransferReply {
+  bool success = 1;
+}
+
+message OpenDBWebRequest {
+  string dbname = 1;
+}
+
+message OpenDBWebReply {
+  bool value = 1;
+}
+
+// 命名必须使用下划线，否则出现传递不了参数的情况
+message OpenDBRequest {
+  string db_name = 1;
+}
+
+// The response message containing the value about register success or not.
+message OpenDBReply {
+  bool value = 1;
+}
+
+message PutRequest {
+  string key = 1;
+  bytes value = 2;
+}
+
+message PutReply {
+  bool data = 1;
+}
+
+message PutStrRequest {
+  string key = 1;
+  string value = 2;
+}
+
+message PutStrReply {
+  bool data = 1;
+}
+
+// The request message containing key.
+message GetRequest {
+  string key = 1;
+}
+
+// The response message containing the value about register success or not.
+message GetReply {
+  bytes value = 1;
+}
+
+message CloseDBRequest {}
+
+message CloseDBReply {}
+
+message CloseDBWebRequest {}
+
+message CloseDBWebReply {}
+
